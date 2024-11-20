@@ -1,0 +1,5 @@
+ditto:
+  dittoui:
+    enabled: "false"
+  swaggerui:
+    enabled: "true"
