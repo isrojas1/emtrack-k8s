@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-debug
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-debug
+  template:
+    metadata:
+      labels:
+        app: ubuntu-debug
+    spec:
+      containers:
+      - name: ubuntu-debug
+        image: ubuntu:noble
+        command:
+          - "sleep"
+          - "604800"
+        imagePullPolicy: IfNotPresent
+        # ports:
+        # - containerPort: 80
+      restartPolicy: Always
