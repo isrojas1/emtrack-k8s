@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: emtscraper
+  namespace: scraping
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     spec:
       containers:
       - name: emtscraper
-        image: isrojas/emtscraper:0.1.1
+        image: harbor.local/library/emtscraper:0.1.6
         # ports:
         # - containerPort: 80
+        imagePullPolicy: Always
