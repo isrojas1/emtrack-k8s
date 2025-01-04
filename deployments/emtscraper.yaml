@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: emtscraper
-        image: harbor.local/library/emtscraper:0.1.8
+        image: harbor.local/library/emtscraper:0.2.0
         # ports:
         # - containerPort: 80
         imagePullPolicy: Always
