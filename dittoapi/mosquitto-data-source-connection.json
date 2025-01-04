@@ -1,0 +1,45 @@
+{
+    "id": "mosquitto-data-source-connection",
+    "name": "mosquitto-data-source-connection",
+    "connectionType": "mqtt-5",
+    "connectionStatus": "open",
+    "uri": "tcp://opentwins-mosquitto:1883",
+    "sources": [
+        {
+            "addresses": [
+                "malaga/bus/+"
+            ],
+            "consumerCount": 1,
+            "qos": 1,
+            "authorizationContext": [
+                "nginx:ditto"
+            ],
+            "headerMapping": {
+                "content-type": "{{header:content-type}}",
+                "reply-to": "{{header:reply-to}}",
+                "correlation-id": "{{header:correlation-id}}"
+            },
+            "payloadMapping": [
+                "Ditto"
+            ],
+            "replyTarget": {
+                "address": "{{header:reply-to}}",
+                "headerMapping": {
+                    "content-type": "{{header:content-type}}",
+                    "correlation-id": "{{header:correlation-id}}"
+                },
+                "expectedResponseTypes": [
+                    "response",
+                    "error"
+                ],
+                "enabled": true
+            }
+        }
+    ],
+    "targets": [],
+    "clientCount": 1,
+    "failoverEnabled": true,
+    "validateCertificates": true,
+    "processorPoolSize": 1,
+    "tags": []
+}
