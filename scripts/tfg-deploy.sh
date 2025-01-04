@@ -18,4 +18,4 @@ helm upgrade --install opentwins ertis/OpenTwins --wait --dependency-update --de
 bash ./dittoapi/connections.sh
 
 # Deploy components
-kubectl apply -f deployments/emtscraper.yaml
+kubectl apply -f ./deployments/emtscraper.yaml
