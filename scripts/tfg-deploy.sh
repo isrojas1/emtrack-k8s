@@ -14,5 +14,8 @@ helm upgrade --install opentwins ertis/OpenTwins --wait --dependency-update --de
              -f "./helms/opentwins/values.yaml" \
              --namespace opentwins
 
+# Create necessary connections
+bash ./dittoapi/connections.sh
+
 # Deploy components
 kubectl apply -f deployments/emtscraper.yaml
