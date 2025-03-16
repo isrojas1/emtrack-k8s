@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emtscraper-buslocation
+  namespace: scraping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emtscraper-buslocation
+  template:
+    metadata:
+      labels:
+        app: emtscraper-buslocation
+    spec:
+      containers:
+      - name: emtscraper-buslocation
+        image: harbor.local/library/buslocation:0.2.1
+        # ports:
+        # - containerPort: 80
+        imagePullPolicy: Always
+        env:
+        - name: MOSQUITTO_HOST
+          value: "$MOSQUITTO_HOST"
+        - name: MOSQUITTO_PORT
+          value: "$MOSQUITTO_PORT"
+        - name: DITTO_BASE_URL
+          value: "$DITTO_BASE_URL"
+        - name: DITTO_USERNAME
+          value: "$DITTO_USERNAME"
+        - name: DITTO_PASSWORD
+          value: "$DITTO_PASSWORD"
