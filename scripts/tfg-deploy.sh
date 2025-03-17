@@ -26,8 +26,8 @@ helm upgrade --install opentwins ertis/OpenTwins --wait --dependency-update \
 # Push harbor images
 docker push --all-tags "${NODE_IP}:30002/library/buslocation"
 
-# Create necessary connections
-# bash ./dittoapi/connections.sh
+# Create or update necessary connections
+bash ./dittoapi/connections.sh "$ENV_FILE"
 
 # Deploy components
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
