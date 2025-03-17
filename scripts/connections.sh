@@ -1,4 +1,13 @@
-source localvm.env
+#!/bin/bash
+
+# Set env variables
+if [ $# -ne 1 ]; then
+  echo "Usage: ./scripts/connections.sh <ENV_FILE>"
+  exit 1
+fi
+
+ENV_FILE=$1
+source "$ENV_FILE" || { echo "Error sourcing env file"; exit 1; }
 
 send_put_request() {
     local url="$1"
