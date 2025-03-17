@@ -1,4 +1,4 @@
-source .env
+source localvm.env
 
 send_put_request() {
     local url="$1"
@@ -11,4 +11,4 @@ send_put_request() {
          "$url"
 }
 
-send_put_request "http://192.168.1.101:30525/api/2/connections/mosquitto-data-source-connection" "./dittoapi/mosquitto-data-source-connection.json"
+send_put_request "http://${NODE_IP}:30525/api/2/connections/mosquitto-emtscraper-source-connection" "./dittoapi/mosquitto-emtscraper-source-connection.json"

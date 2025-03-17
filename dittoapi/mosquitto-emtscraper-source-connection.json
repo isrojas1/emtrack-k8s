@@ -1,6 +1,6 @@
 {
-    "id": "mosquitto-data-source-connection",
-    "name": "mosquitto-data-source-connection",
+    "id": "mosquitto-emtscraper-source-connection",
+    "name": "mosquitto-emtscraper-source-connection",
     "connectionType": "mqtt-5",
     "connectionStatus": "open",
     "uri": "tcp://opentwins-mosquitto:1883",
