@@ -10,7 +10,7 @@ if [ $# -ne 1 ]; then
 fi
 
 ENV_FILE=$1
-source "$ENV_FILE" ||{ echo "Error sourcing env file"; exit 1; }
+source "$ENV_FILE" || { echo "Error sourcing env file"; exit 1; }
 
 # Create namespaces
 kubectl apply -f ./deployments/namespaces.yaml
