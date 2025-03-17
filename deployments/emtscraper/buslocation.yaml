@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: emtscraper-buslocation
-        image: harbor.local/library/buslocation:0.2.1
+        image: harbor.local/library/buslocation:0.2.2
         # ports:
         # - containerPort: 80
         imagePullPolicy: Always
