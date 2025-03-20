@@ -1,0 +1,315 @@
+{
+    "dashboard": {
+        "annotations": {
+            "list": [
+                {
+                    "builtIn": 1,
+                    "datasource": {
+                        "type": "grafana",
+                        "uid": "-- Grafana --"
+                    },
+                    "enable": true,
+                    "hide": true,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "type": "dashboard"
+                }
+            ]
+        },
+        "editable": true,
+        "fiscalYearStartMonth": 0,
+        "graphTooltip": 0,
+        "id": null,
+        "links": [],
+        "liveNow": false,
+        "panels": [
+            {
+                "datasource": {
+                    "type": "influxdb",
+                    "uid": "P4528D75AB74BE2EA"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "custom": {
+                            "hideFrom": {
+                                "legend": false,
+                                "tooltip": false,
+                                "viz": false
+                            }
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 13,
+                    "w": 24,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 2,
+                "options": {
+                    "basemap": {
+                        "config": {
+                            "showLabels": true,
+                            "theme": "auto"
+                        },
+                        "name": "Layer 0",
+                        "opacity": 1,
+                        "tooltip": false,
+                        "type": "carto"
+                    },
+                    "controls": {
+                        "mouseWheelZoom": true,
+                        "showAttribution": true,
+                        "showDebug": false,
+                        "showMeasure": false,
+                        "showScale": false,
+                        "showZoom": true
+                    },
+                    "layers": [
+                        {
+                            "config": {
+                                "showLegend": true,
+                                "style": {
+                                    "color": {
+                                        "fixed": "dark-green"
+                                    },
+                                    "opacity": 0.4,
+                                    "rotation": {
+                                        "fixed": 0,
+                                        "max": 360,
+                                        "min": -360,
+                                        "mode": "mod"
+                                    },
+                                    "size": {
+                                        "field": "Time",
+                                        "fixed": 5,
+                                        "max": 15,
+                                        "min": 2
+                                    },
+                                    "symbol": {
+                                        "fixed": "img/icons/marker/circle.svg",
+                                        "mode": "fixed"
+                                    },
+                                    "textConfig": {
+                                        "fontSize": 12,
+                                        "offsetX": 0,
+                                        "offsetY": 0,
+                                        "textAlign": "center",
+                                        "textBaseline": "middle"
+                                    }
+                                }
+                            },
+                            "filterData": {
+                                "id": "byRefId",
+                                "options": "B"
+                            },
+                            "location": {
+                                "latitude": "value_gps_properties_latitude",
+                                "longitude": "value_gps_properties_longitude",
+                                "mode": "coords"
+                            },
+                            "name": "Layer 1",
+                            "tooltip": true,
+                            "type": "markers"
+                        }
+                    ],
+                    "tooltip": {
+                        "mode": "details"
+                    },
+                    "view": {
+                        "allLayers": true,
+                        "id": "fit",
+                        "lat": 0,
+                        "lon": 0,
+                        "zoom": 15
+                    }
+                },
+                "pluginVersion": "9.5.2",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "influxdb",
+                            "uid": "P4528D75AB74BE2EA"
+                        },
+                        "hide": false,
+                        "query": "from(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_gps_properties_longitude\" or r[\"_field\"] == \"value_gps_properties_latitude\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"${busId}\")\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))  // Correctly transform _value from string to float\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n",
+                        "refId": "B"
+                    }
+                ],
+                "title": "Mapa",
+                "type": "geomap"
+            },
+            {
+                "datasource": {
+                    "type": "influxdb",
+                    "uid": "P4528D75AB74BE2EA"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "palette-classic"
+                        },
+                        "custom": {
+                            "axisCenteredZero": false,
+                            "axisColorMode": "text",
+                            "axisLabel": "",
+                            "axisPlacement": "left",
+                            "barAlignment": 0,
+                            "drawStyle": "line",
+                            "fillOpacity": 0,
+                            "gradientMode": "none",
+                            "hideFrom": {
+                                "legend": false,
+                                "tooltip": false,
+                                "viz": false
+                            },
+                            "lineInterpolation": "linear",
+                            "lineWidth": 1,
+                            "pointSize": 5,
+                            "scaleDistribution": {
+                                "type": "linear"
+                            },
+                            "showPoints": "auto",
+                            "spanNulls": false,
+                            "stacking": {
+                                "group": "A",
+                                "mode": "none"
+                            },
+                            "thresholdsStyle": {
+                                "mode": "off"
+                            }
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    },
+                    "overrides": [
+                        {
+                            "matcher": {
+                                "id": "byFrameRefID",
+                                "options": "B"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.axisPlacement",
+                                    "value": "auto"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "gridPos": {
+                    "h": 18,
+                    "w": 24,
+                    "x": 0,
+                    "y": 13
+                },
+                "id": 1,
+                "options": {
+                    "legend": {
+                        "calcs": [],
+                        "displayMode": "list",
+                        "placement": "bottom",
+                        "showLegend": true
+                    },
+                    "tooltip": {
+                        "mode": "single",
+                        "sort": "none"
+                    }
+                },
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "influxdb",
+                            "uid": "P4528D75AB74BE2EA"
+                        },
+                        "query": "from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_gps_properties_longitude\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"${busId}\")\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))  // Correctly transform _value from string to float\r\n",
+                        "refId": "A"
+                    },
+                    {
+                        "datasource": {
+                            "type": "influxdb",
+                            "uid": "P4528D75AB74BE2EA"
+                        },
+                        "hide": false,
+                        "query": "from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_gps_properties_latitude\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"${busId}\")\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))  // Correctly transform _value from string to float\r\n",
+                        "refId": "B"
+                    }
+                ],
+                "title": "Ubicación Bus",
+                "type": "timeseries"
+            }
+        ],
+        "refresh": "1m",
+        "schemaVersion": 38,
+        "style": "dark",
+        "tags": [],
+        "templating": {
+            "list": [
+                {
+                    "current": {
+                        "selected": false,
+                        "text": "buses:712",
+                        "value": "buses:712"
+                    },
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P4528D75AB74BE2EA"
+                    },
+                    "definition": "// Get distinct thingId values\nthingIds = from(bucket: \"default\")\n  |> range(start: -1y) // Adjust the time range as needed\n  |> filter(fn: (r) => r._measurement == \"mqtt_consumer\")\n  |> distinct(column: \"thingId\")\n  |> keep(columns: [\"thingId\"])\n\n// Get thingId values with latitude in the last 15 minutes\nlatitudeValues = from(bucket: \"default\")\n  |> range(start: -15m) // Last 15 minutes\n  |> filter(fn: (r) => r._measurement == \"mqtt_consumer\" and r._field == \"value_gps_properties_latitude\")\n  |> keep(columns: [\"thingId\"]) // Keep only the thingId column\n  |> distinct(column: \"thingId\") // Get distinct thingId values with latitude\n\n// Join the two tables to get only those thingIds that have latitude values\njoin(tables: {thingIds: thingIds, latitudeValues: latitudeValues}, on: [\"thingId\"], method: \"inner\")\n  |> group()\n  |> distinct(column: \"thingId\")\n",
+                    "hide": 0,
+                    "includeAll": false,
+                    "label": "Bus Id",
+                    "multi": false,
+                    "name": "busId",
+                    "options": [],
+                    "query": "// Get distinct thingId values\nthingIds = from(bucket: \"default\")\n  |> range(start: -1y) // Adjust the time range as needed\n  |> filter(fn: (r) => r._measurement == \"mqtt_consumer\")\n  |> distinct(column: \"thingId\")\n  |> keep(columns: [\"thingId\"])\n\n// Get thingId values with latitude in the last 15 minutes\nlatitudeValues = from(bucket: \"default\")\n  |> range(start: -15m) // Last 15 minutes\n  |> filter(fn: (r) => r._measurement == \"mqtt_consumer\" and r._field == \"value_gps_properties_latitude\")\n  |> keep(columns: [\"thingId\"]) // Keep only the thingId column\n  |> distinct(column: \"thingId\") // Get distinct thingId values with latitude\n\n// Join the two tables to get only those thingIds that have latitude values\njoin(tables: {thingIds: thingIds, latitudeValues: latitudeValues}, on: [\"thingId\"], method: \"inner\")\n  |> group()\n  |> distinct(column: \"thingId\")\n",
+                    "refresh": 1,
+                    "regex": "",
+                    "skipUrlSync": false,
+                    "sort": 1,
+                    "type": "query"
+                }
+            ]
+        },
+        "time": {
+            "from": "now-6h",
+            "to": "now"
+        },
+        "timepicker": {},
+        "timezone": "",
+        "title": "Ubicación Bus",
+        "uid": "d70c670c-7665-421e-9487-e2ed664b2fb1",
+        "version": 11,
+        "weekStart": ""
+    }
+}
