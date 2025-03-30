@@ -15,7 +15,9 @@ send_put_request() {
     local password="$3"
     local json_file="$4"
 
-    curl -X PUT -H "Content-Type: application/json" \
+    echo "Sending PUT request to url: $url"
+
+    curl -v -X PUT -H "Content-Type: application/json" \
          -u "$username:$password" \
          -H 'Accept: application/json' \
          -d @"$json_file" \
@@ -28,7 +30,9 @@ send_post_request() {
     local password="$3"
     local json_file="$4"
 
-    curl -X POST -H "Content-Type: application/json" \
+    echo "Sending POST request to url: $url"
+
+    curl -v -X POST -H "Content-Type: application/json" \
          -u "$username:$password" \
          -H 'Accept: application/json' \
          -d @"$json_file" \
