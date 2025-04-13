@@ -7,7 +7,7 @@
     "sources": [
         {
             "addresses": [
-                "malaga/bus/+"
+                "malaga/#"
             ],
             "consumerCount": 1,
             "qos": 1,
