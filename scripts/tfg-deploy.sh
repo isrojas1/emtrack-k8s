@@ -28,3 +28,4 @@ docker push --all-tags "${NODE_IP}:30002/library/buslocation"
 
 # Deploy components
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
+envsubst < ./cronjobs/emtscraper/routes.yaml | kubectl apply -f -

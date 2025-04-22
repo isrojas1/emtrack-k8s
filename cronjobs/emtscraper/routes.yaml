@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: emtscraper-routes
+  namespace: scraping
+spec:
+  schedule: "0 3 * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: emtscraper-routes
+            image: harbor.local/library/routes:0.2.2
+            env:
+            - name: MOSQUITTO_HOST
+              value: "$MOSQUITTO_HOST"
+            - name: MOSQUITTO_PORT
+              value: "$MOSQUITTO_PORT"
+            - name: DITTO_BASE_URL
+              value: "$DITTO_BASE_URL"
+            - name: DITTO_USERNAME
+              value: "$DITTO_USERNAME"
+            - name: DITTO_PASSWORD
+              value: "$DITTO_PASSWORD"
+            imagePullPolicy: Always
+          restartPolicy: OnFailure
