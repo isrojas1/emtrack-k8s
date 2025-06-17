@@ -13,7 +13,7 @@ spec:
         spec:
           containers:
           - name: emtscraper-routes
-            image: harbor.local/library/routes:0.2.2
+            image: harbor.local/library/routes:0.2.3
             env:
             - name: MOSQUITTO_HOST
               value: "$MOSQUITTO_HOST"
