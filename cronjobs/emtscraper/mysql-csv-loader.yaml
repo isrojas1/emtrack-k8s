@@ -1,0 +1,87 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-csv-loader
+  namespace: scraping
+spec:
+  schedule: "0 1 * * *"  # Ejecutar cada día a las 1:00
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: load-csv-mysql
+            image: alpine/mysql:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              # Descargar y descomprimir archivos en /tmp
+              wget -O /tmp/google_transit.zip https://datosabiertos.malaga.eu/recursos/transporte/EMT/lineasYHorarios/google_transit.zip
+              unzip -o /tmp/google_transit.zip -d /tmp
+              
+              # Resetear tablas y cargar datos en una transacción
+              mysql --host=$(MYSQL_HOST) --user=$(DB_USER) --password=$(DB_PASSWORD) --database=$(DB_NAME) --local-infile=1 --skip-ssl \
+                -e "START TRANSACTION;
+                    DROP TABLE IF EXISTS trips, shapes;
+                    CREATE TABLE trips (
+                      route_id INT,
+                      service_id VARCHAR(255),
+                      trip_id VARCHAR(255) NOT NULL,
+                      trip_headsign VARCHAR(255),
+                      direction_id INT,
+                      block_id VARCHAR(255),
+                      shape_id INT,
+                      PRIMARY KEY (trip_id)
+                    );
+                    CREATE TABLE shapes (
+                      shape_id VARCHAR(5) NOT NULL,
+                      shape_pt_lat DECIMAL(10,8),
+                      shape_pt_lon DECIMAL(11,9),
+                      shape_pt_sequence INT NOT NULL,
+                      shape_dist_traveled INT,
+                      PRIMARY KEY (shape_id, shape_pt_sequence)
+                    );
+                    LOAD DATA LOCAL INFILE '/tmp/trips.csv' INTO TABLE trips 
+                      FIELDS TERMINATED BY ',' 
+                      ENCLOSED BY '\"' 
+                      LINES TERMINATED BY '\n' 
+                      IGNORE 1 LINES 
+                      (route_id, service_id, trip_id, trip_headsign, direction_id, block_id, shape_id);
+                    LOAD DATA LOCAL INFILE '/tmp/shapes.csv' INTO TABLE shapes 
+                      FIELDS TERMINATED BY ',' 
+                      ENCLOSED BY '\"' 
+                      LINES TERMINATED BY '\n' 
+                      IGNORE 1 LINES 
+                      (shape_id, shape_pt_lat, shape_pt_lon, shape_pt_sequence, shape_dist_traveled);
+                    COMMIT;"
+
+              # Refrescar la vista (fuera de la transacción)
+              mysql --host=$(MYSQL_HOST) --user=$(DB_USER) --password=$(DB_PASSWORD) --database=$(DB_NAME) --skip-ssl \
+                -e "CREATE OR REPLACE VIEW trips_summary AS
+                      SELECT DISTINCT
+                        route_id,
+                        direction_id + 1 AS direction_id,
+                        shape_id
+                      FROM trips
+                      ORDER BY route_id ASC;"
+            volumeMounts:
+            - name: temp-storage
+              mountPath: /tmp
+            env:
+            - name: MYSQL_HOST
+              value: "mysql.mysql"
+            - name: DB_USER
+              value: "root"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: DB_NAME
+              value: "emtdata"
+          restartPolicy: OnFailure
+          volumes:
+          - name: temp-storage
+            emptyDir: {}  # Almacenamiento temporal en memoria
