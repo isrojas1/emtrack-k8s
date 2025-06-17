@@ -3,7 +3,7 @@ mirrors:
      endpoint:
        - "http://${NODE_IP}:30002"
 configs:
-  "192.168.1.101:30002":
+  "${NODE_IP}:30002":
     auth:
       username: admin # this is the registry username
       password: Harbor12345 # this is the registry password
