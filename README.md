@@ -13,6 +13,9 @@ nodo.
 
 ## Despliegue
 
+- IMPORTANTE: Asegurarse de que el cluster configurado en el kubeconfig es el que queremos
+(ver kubectx).
+
 - Opcional: Ejecutar `bash scripts/harbor-deploy.sh <ENV_FILE>` para desplegar harbor, un
 registro de contenedores local de codigo abierto que se ejecutará en nuestro
 cluster. De esta forma podremos alojar las imágenes docker de nuestros
@@ -22,5 +25,6 @@ preferencia, ya sea local o en la nube.
 - Ejecutar `bash scripts/tfg-deploy.sh <ENV_FILE>`.
 
 - Iniciar sesión en Grafana y configurar en plugins -> opentwins los ajustes pertinentes.
+![alt text](docs/images/grafana-ditto-config.png)
 
 - Ejecutar `bash scripts/connections.sh <ENV_FILE>`.
