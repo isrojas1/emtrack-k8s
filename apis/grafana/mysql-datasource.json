@@ -1,0 +1,22 @@
+{
+    "uid": "denkd2jbpv1tsf",
+    "orgId": 1,
+    "name": "mysql",
+    "type": "mysql",
+    "typeName": "MySQL",
+    "typeLogoUrl": "public/app/plugins/datasource/mysql/img/mysql_logo.svg",
+    "access": "proxy",
+    "url": "mysql.mysql:3306",
+    "user": "root",
+    "database": "",
+    "basicAuth": false,
+    "isDefault": false,
+    "jsonData": {
+        "connMaxLifetime": 14400,
+        "database": "emtdata",
+        "maxIdleConns": 100,
+        "maxIdleConnsAuto": true,
+        "maxOpenConns": 100
+    },
+    "readOnly": false
+}
