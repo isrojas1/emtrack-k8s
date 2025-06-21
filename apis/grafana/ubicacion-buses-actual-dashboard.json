@@ -1,396 +1,384 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_OPENTWINS",
-      "label": "opentwins",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "influxdb",
-      "pluginName": "InfluxDB"
-    },
-    {
-      "name": "DS_MYSQL",
-      "label": "mysql",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "mysql",
-      "pluginName": "MySQL"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "geomap",
-      "name": "Geomap",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.4.19"
-    },
-    {
-      "type": "datasource",
-      "id": "influxdb",
-      "name": "InfluxDB",
-      "version": "1.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "mysql",
-      "name": "MySQL",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    }
-  ],
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
-  },
-  "description": "Muestra las últimas ubicaciones conocidas de los buses actualmente en circulación. Permite filtrar por línea.",
-  "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "id": null,
-  "links": [],
-  "panels": [
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "${DS_OPENTWINS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 3,
-        "x": 0,
-        "y": 0
-      },
-      "id": 2,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "10.4.19",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_OPENTWINS}"
-          },
-          "query": "from(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => \r\n    r[\"_field\"] == \"value_gps_properties_longitude\" or \r\n    r[\"_field\"] == \"value_gps_properties_latitude\" or \r\n    r[\"_field\"] == \"value_line_properties_direction\" or \r\n    r[\"_field\"] == \"value_line_properties_code\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> group(columns: [\"thingId\"])\r\n  |> filter(fn: (r) =>\r\n    ${Linea} == 0.0 or\r\n    (exists r.value_line_properties_code and r.value_line_properties_code == ${Linea})\r\n  )\r\n  |> sort(columns: [\"_time\"], desc: true)\r\n  |> unique(column: \"thingId\")\r\n  |> group()\r\n  |> count(column: \"thingId\")\r\n  ",
-          "refId": "A"
-        }
-      ],
-      "title": "Numero de buses circulando",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "datasource",
-        "uid": "-- Mixed --"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
+    "meta": {
+        "type": "db",
+        "canSave": true,
+        "canEdit": true,
+        "canAdmin": true,
+        "canStar": true,
+        "canDelete": true,
+        "slug": "ubicaciones-buses-actualmente",
+        "url": "/d/feno3i9jb8e0wf/ubicaciones-buses-actualmente",
+        "expires": "0001-01-01T00:00:00Z",
+        "created": "2025-06-20T17:31:03Z",
+        "updated": "2025-06-20T17:31:03Z",
+        "updatedBy": "admin",
+        "createdBy": "admin",
+        "version": 1,
+        "hasAcl": false,
+        "isFolder": false,
+        "apiVersion": "v0alpha1",
+        "folderId": 0,
+        "folderUid": "",
+        "folderTitle": "General",
+        "folderUrl": "",
+        "provisioned": false,
+        "provisionedExternalId": "",
+        "annotationsPermissions": {
+            "dashboard": {
+                "canAdd": true,
+                "canEdit": true,
+                "canDelete": true
+            },
+            "organization": {
+                "canAdd": true,
+                "canEdit": true,
+                "canDelete": true
             }
-          },
-          "links": [
+        }
+    },
+    "dashboard": {
+        "annotations": {
+            "list": [
+                {
+                    "builtIn": 1,
+                    "datasource": {
+                        "type": "grafana",
+                        "uid": "-- Grafana --"
+                    },
+                    "enable": true,
+                    "hide": true,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "type": "dashboard"
+                }
+            ]
+        },
+        "description": "Muestra las últimas ubicaciones conocidas de los buses actualmente en circulación. Permite filtrar por línea.",
+        "editable": true,
+        "fiscalYearStartMonth": 0,
+        "graphTooltip": 0,
+        "id": 5,
+        "links": [],
+        "panels": [
             {
-              "title": "Ubicación Bus",
-              "url": "/d/d70c670c-7665-421e-9487-e2ed664b2fb1/ubicacion-bus?orgId=1&refresh=1m&var-busId=${__data.fields[\"thingId\"]}"
+                "datasource": {
+                    "type": "influxdb",
+                    "uid": "P4528D75AB74BE2EA"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 3,
+                    "w": 3,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 2,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "area",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                        "calcs": [
+                            "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "showPercentChange": false,
+                    "textMode": "auto",
+                    "wideLayout": true
+                },
+                "pluginVersion": "10.4.19",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "influxdb",
+                            "uid": "P4528D75AB74BE2EA"
+                        },
+                        "query": "from(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => \r\n    r[\"_field\"] == \"value_gps_properties_longitude\" or \r\n    r[\"_field\"] == \"value_gps_properties_latitude\" or \r\n    r[\"_field\"] == \"value_line_properties_direction\" or \r\n    r[\"_field\"] == \"value_line_properties_code\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> group(columns: [\"thingId\"])\r\n  |> filter(fn: (r) =>\r\n    ${Linea} == 0.0 or\r\n    (exists r.value_line_properties_code and r.value_line_properties_code == ${Linea})\r\n  )\r\n  |> sort(columns: [\"_time\"], desc: true)\r\n  |> unique(column: \"thingId\")\r\n  |> group()\r\n  |> count(column: \"thingId\")\r\n  ",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Numero de buses circulando",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "-- Mixed --"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "custom": {
+                            "hideFrom": {
+                                "legend": false,
+                                "tooltip": false,
+                                "viz": false
+                            }
+                        },
+                        "links": [
+                            {
+                                "title": "Ubicación Bus",
+                                "url": "/d/d70c670c-7665-421e-9487-e2ed664b2fb1/ubicacion-bus?orgId=1&refresh=1m&var-busId=${__data.fields[\"thingId\"]}"
+                            }
+                        ],
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 22,
+                    "w": 21,
+                    "x": 3,
+                    "y": 0
+                },
+                "id": 1,
+                "options": {
+                    "basemap": {
+                        "config": {},
+                        "name": "Layer 0",
+                        "type": "osm-standard"
+                    },
+                    "controls": {
+                        "mouseWheelZoom": true,
+                        "showAttribution": true,
+                        "showDebug": false,
+                        "showMeasure": false,
+                        "showScale": false,
+                        "showZoom": true
+                    },
+                    "layers": [
+                        {
+                            "config": {
+                                "showLegend": true,
+                                "style": {
+                                    "color": {
+                                        "fixed": "semi-dark-blue"
+                                    },
+                                    "opacity": 0.7,
+                                    "rotation": {
+                                        "fixed": 0,
+                                        "max": 360,
+                                        "min": -360,
+                                        "mode": "mod"
+                                    },
+                                    "size": {
+                                        "fixed": 5,
+                                        "max": 15,
+                                        "min": 2
+                                    },
+                                    "symbol": {
+                                        "fixed": "img/icons/marker/circle.svg",
+                                        "mode": "fixed"
+                                    },
+                                    "symbolAlign": {
+                                        "horizontal": "center",
+                                        "vertical": "center"
+                                    },
+                                    "textConfig": {
+                                        "fontSize": 12,
+                                        "offsetX": 0,
+                                        "offsetY": 0,
+                                        "textAlign": "center",
+                                        "textBaseline": "middle"
+                                    }
+                                }
+                            },
+                            "filterData": {
+                                "id": "byRefId",
+                                "options": "A"
+                            },
+                            "location": {
+                                "latitude": "value_gps_properties_latitude",
+                                "longitude": "value_gps_properties_longitude",
+                                "mode": "coords"
+                            },
+                            "name": "Buses",
+                            "tooltip": true,
+                            "type": "markers"
+                        },
+                        {
+                            "config": {
+                                "arrow": 0,
+                                "style": {
+                                    "color": {
+                                        "fixed": "dark-blue"
+                                    },
+                                    "lineWidth": 2,
+                                    "opacity": 1,
+                                    "rotation": {
+                                        "fixed": 0,
+                                        "max": 360,
+                                        "min": -360,
+                                        "mode": "mod"
+                                    },
+                                    "size": {
+                                        "fixed": 5,
+                                        "max": 15,
+                                        "min": 2
+                                    },
+                                    "symbol": {
+                                        "fixed": "img/icons/marker/circle.svg",
+                                        "mode": "fixed"
+                                    },
+                                    "symbolAlign": {
+                                        "horizontal": "center",
+                                        "vertical": "center"
+                                    },
+                                    "textConfig": {
+                                        "fontSize": 12,
+                                        "offsetX": 0,
+                                        "offsetY": 0,
+                                        "textAlign": "center",
+                                        "textBaseline": "middle"
+                                    }
+                                }
+                            },
+                            "filterData": {
+                                "id": "byRefId",
+                                "options": "B"
+                            },
+                            "location": {
+                                "latitude": "shape_pt_lat",
+                                "longitude": "shape_pt_lon",
+                                "mode": "coords"
+                            },
+                            "name": "Rutas",
+                            "opacity": 0.4,
+                            "tooltip": true,
+                            "type": "route"
+                        }
+                    ],
+                    "tooltip": {
+                        "mode": "details"
+                    },
+                    "view": {
+                        "allLayers": true,
+                        "id": "fit",
+                        "lat": 0,
+                        "lon": 0,
+                        "zoom": 15
+                    }
+                },
+                "pluginVersion": "10.4.19",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "influxdb",
+                            "uid": "P4528D75AB74BE2EA"
+                        },
+                        "query": "from(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => \r\n    r[\"_field\"] == \"value_gps_properties_longitude\" or \r\n    r[\"_field\"] == \"value_gps_properties_latitude\" or \r\n    r[\"_field\"] == \"value_line_properties_direction\" or \r\n    r[\"_field\"] == \"value_line_properties_code\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  // Filtros opcionales usando variables de Grafana\r\n  |> filter(fn: (r) =>\r\n    ${Linea} == 0.0 or\r\n    (exists r.value_line_properties_code and r.value_line_properties_code == ${Linea})\r\n  )\r\n  |> group(columns: [\"thingId\"])\r\n  |> sort(columns: [\"_time\"], desc: true)\r\n  |> group()\r\n  |> unique(column: \"thingId\")\r\n\r\n",
+                        "refId": "A"
+                    },
+                    {
+                        "dataset": "emtdata",
+                        "datasource": {
+                            "type": "mysql",
+                            "uid": "denkd2jbpv1tsf"
+                        },
+                        "editorMode": "code",
+                        "format": "table",
+                        "hide": false,
+                        "rawQuery": true,
+                        "rawSql": "SELECT *\r\nFROM shapes\r\nWHERE shape_id REGEXP CONCAT('^', ${Linea}, '[0-9]$');\r\n",
+                        "refId": "B",
+                        "sql": {
+                            "columns": [
+                                {
+                                    "parameters": [],
+                                    "type": "function"
+                                }
+                            ],
+                            "groupBy": [
+                                {
+                                    "property": {
+                                        "type": "string"
+                                    },
+                                    "type": "groupBy"
+                                }
+                            ],
+                            "limit": 50
+                        }
+                    }
+                ],
+                "title": "Mapa actual",
+                "type": "geomap"
             }
-          ],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 22,
-        "w": 21,
-        "x": 3,
-        "y": 0
-      },
-      "id": 1,
-      "options": {
-        "basemap": {
-          "config": {},
-          "name": "Layer 0",
-          "type": "osm-standard"
-        },
-        "controls": {
-          "mouseWheelZoom": true,
-          "showAttribution": true,
-          "showDebug": false,
-          "showMeasure": false,
-          "showScale": false,
-          "showZoom": true
-        },
-        "layers": [
-          {
-            "config": {
-              "showLegend": true,
-              "style": {
-                "color": {
-                  "fixed": "semi-dark-blue"
-                },
-                "opacity": 0.7,
-                "rotation": {
-                  "fixed": 0,
-                  "max": 360,
-                  "min": -360,
-                  "mode": "mod"
-                },
-                "size": {
-                  "fixed": 5,
-                  "max": 15,
-                  "min": 2
-                },
-                "symbol": {
-                  "fixed": "img/icons/marker/circle.svg",
-                  "mode": "fixed"
-                },
-                "symbolAlign": {
-                  "horizontal": "center",
-                  "vertical": "center"
-                },
-                "textConfig": {
-                  "fontSize": 12,
-                  "offsetX": 0,
-                  "offsetY": 0,
-                  "textAlign": "center",
-                  "textBaseline": "middle"
-                }
-              }
-            },
-            "filterData": {
-              "id": "byRefId",
-              "options": "A"
-            },
-            "location": {
-              "latitude": "value_gps_properties_latitude",
-              "longitude": "value_gps_properties_longitude",
-              "mode": "coords"
-            },
-            "name": "Buses",
-            "tooltip": true,
-            "type": "markers"
-          },
-          {
-            "config": {
-              "arrow": 0,
-              "style": {
-                "color": {
-                  "fixed": "dark-blue"
-                },
-                "lineWidth": 2,
-                "opacity": 1,
-                "rotation": {
-                  "fixed": 0,
-                  "max": 360,
-                  "min": -360,
-                  "mode": "mod"
-                },
-                "size": {
-                  "fixed": 5,
-                  "max": 15,
-                  "min": 2
-                },
-                "symbol": {
-                  "fixed": "img/icons/marker/circle.svg",
-                  "mode": "fixed"
-                },
-                "symbolAlign": {
-                  "horizontal": "center",
-                  "vertical": "center"
-                },
-                "textConfig": {
-                  "fontSize": 12,
-                  "offsetX": 0,
-                  "offsetY": 0,
-                  "textAlign": "center",
-                  "textBaseline": "middle"
-                }
-              }
-            },
-            "filterData": {
-              "id": "byRefId",
-              "options": "B"
-            },
-            "location": {
-              "latitude": "shape_pt_lat",
-              "longitude": "shape_pt_lon",
-              "mode": "coords"
-            },
-            "name": "Rutas",
-            "opacity": 0.4,
-            "tooltip": true,
-            "type": "route"
-          }
         ],
-        "tooltip": {
-          "mode": "details"
+        "refresh": "",
+        "schemaVersion": 39,
+        "tags": [],
+        "templating": {
+            "list": [
+                {
+                    "allValue": "0.0",
+                    "current": {},
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "P4528D75AB74BE2EA"
+                    },
+                    "definition": "import \"strings\"\r\n\r\nfrom(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> keep(columns: [\"_value\"])\r\n  |> distinct(column: \"_value\")\r\n  |> map(fn: (r) => ({ r with code_num: float(v: r._value) }))\r\n  |> sort(columns: [\"code_num\"])\r\n  // Convertir a string y eliminar el \".0\"\r\n  |> map(fn: (r) => ({ \r\n      _value: strings.split(v: r._value, t: \".\")[0] \r\n  }))\r\n  |> keep(columns: [\"_value\"])  // Solo dejas la columna string original\r\n",
+                    "hide": 0,
+                    "includeAll": true,
+                    "multi": false,
+                    "name": "Linea",
+                    "options": [],
+                    "query": "import \"strings\"\r\n\r\nfrom(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> keep(columns: [\"_value\"])\r\n  |> distinct(column: \"_value\")\r\n  |> map(fn: (r) => ({ r with code_num: float(v: r._value) }))\r\n  |> sort(columns: [\"code_num\"])\r\n  // Convertir a string y eliminar el \".0\"\r\n  |> map(fn: (r) => ({ \r\n      _value: strings.split(v: r._value, t: \".\")[0] \r\n  }))\r\n  |> keep(columns: [\"_value\"])  // Solo dejas la columna string original\r\n",
+                    "refresh": 1,
+                    "regex": "",
+                    "skipUrlSync": false,
+                    "sort": 0,
+                    "type": "query"
+                }
+            ]
         },
-        "view": {
-          "allLayers": true,
-          "id": "fit",
-          "lat": 0,
-          "lon": 0,
-          "zoom": 15
-        }
-      },
-      "pluginVersion": "10.4.19",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "${DS_OPENTWINS}"
-          },
-          "query": "from(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => \r\n    r[\"_field\"] == \"value_gps_properties_longitude\" or \r\n    r[\"_field\"] == \"value_gps_properties_latitude\" or \r\n    r[\"_field\"] == \"value_line_properties_direction\" or \r\n    r[\"_field\"] == \"value_line_properties_code\"\r\n  )\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  // Filtros opcionales usando variables de Grafana\r\n  |> filter(fn: (r) =>\r\n    ${Linea} == 0.0 or\r\n    (exists r.value_line_properties_code and r.value_line_properties_code == ${Linea})\r\n  )\r\n  |> group(columns: [\"thingId\"])\r\n  |> sort(columns: [\"_time\"], desc: true)\r\n  |> group()\r\n  |> unique(column: \"thingId\")\r\n\r\n",
-          "refId": "A"
+        "time": {
+            "from": "now-6h",
+            "to": "now"
         },
-        {
-          "dataset": "emtdata",
-          "datasource": {
-            "type": "mysql",
-            "uid": "${DS_MYSQL}"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "hide": false,
-          "rawQuery": true,
-          "rawSql": "SELECT *\r\nFROM shapes\r\nWHERE shape_id REGEXP CONCAT('^', ${Linea}, '[0-9]$');\r\n",
-          "refId": "B",
-          "sql": {
-            "columns": [
-              {
-                "parameters": [],
-                "type": "function"
-              }
-            ],
-            "groupBy": [
-              {
-                "property": {
-                  "type": "string"
-                },
-                "type": "groupBy"
-              }
-            ],
-            "limit": 50
-          }
-        }
-      ],
-      "title": "Mapa actual",
-      "type": "geomap"
+        "timepicker": {},
+        "timezone": "browser",
+        "title": "Ubicaciones Buses Actualmente",
+        "uid": "feno3i9jb8e0wf",
+        "version": 1,
+        "weekStart": ""
     }
-  ],
-  "refresh": "",
-  "schemaVersion": 39,
-  "tags": [],
-  "templating": {
-    "list": [
-      {
-        "allValue": "0.0",
-        "current": {},
-        "datasource": {
-          "type": "influxdb",
-          "uid": "${DS_OPENTWINS}"
-        },
-        "definition": "import \"strings\"\r\n\r\nfrom(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> keep(columns: [\"_value\"])\r\n  |> distinct(column: \"_value\")\r\n  |> map(fn: (r) => ({ r with code_num: float(v: r._value) }))\r\n  |> sort(columns: [\"code_num\"])\r\n  // Convertir a string y eliminar el \".0\"\r\n  |> map(fn: (r) => ({ \r\n      _value: strings.split(v: r._value, t: \".\")[0] \r\n  }))\r\n  |> keep(columns: [\"_value\"])  // Solo dejas la columna string original\r\n",
-        "hide": 0,
-        "includeAll": true,
-        "multi": false,
-        "name": "Linea",
-        "options": [],
-        "query": "import \"strings\"\r\n\r\nfrom(bucket: \"default\")\r\n  |> range(start: -1h)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> keep(columns: [\"_value\"])\r\n  |> distinct(column: \"_value\")\r\n  |> map(fn: (r) => ({ r with code_num: float(v: r._value) }))\r\n  |> sort(columns: [\"code_num\"])\r\n  // Convertir a string y eliminar el \".0\"\r\n  |> map(fn: (r) => ({ \r\n      _value: strings.split(v: r._value, t: \".\")[0] \r\n  }))\r\n  |> keep(columns: [\"_value\"])  // Solo dejas la columna string original\r\n",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      }
-    ]
-  },
-  "time": {
-    "from": "now-6h",
-    "to": "now"
-  },
-  "timepicker": {},
-  "timezone": "browser",
-  "title": "Ubicaciones Buses Actualmente",
-  "uid": "feno3i9jb8e0wf",
-  "version": 9,
-  "weekStart": ""
 }
