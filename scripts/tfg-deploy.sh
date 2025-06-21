@@ -33,7 +33,6 @@ docker push --all-tags "${NODE_IP}:30002/library/buslocation"
 docker push --all-tags "${NODE_IP}:30002/library/routes"
 
 # Deploy mysql
-kubectl create namespace mysql
 envsubst < ./secrets/mysql-secret.yaml | kubectl apply -f -
 kubectl apply -f ./services/mysql.yaml
 kubectl apply -f ./statefulsets/mysql.yaml
