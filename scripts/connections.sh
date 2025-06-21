@@ -41,13 +41,17 @@ send_post_request() {
 
 # Create grafana's mysql connection
 send_post_request "http://${NODE_IP}:30718/api/datasources" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" <(envsubst < ./apis/grafana/mysql-datasource.json)
+echo
 
 # Create ditto's mosquitto-emtscraper-source-connection
 send_put_request "http://${NODE_IP}:30525/api/2/connections/mosquitto-emtscraper-source-connection" "$DITTO_API_USERNAME" "$DITTO_API_PASSWORD" "./apis/ditto/mosquitto-emtscraper-source-connection.json"
+echo
 
 # Create grafana's ubicacion-bus-dashboard
 send_post_request "http://${NODE_IP}:30718/api/dashboards/db" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" "./apis/grafana/ubicacion-bus-dashboard.json"
+echo
 
 # Create grafana's ubicacion-buses-actual-dashboard
 send_post_request "http://${NODE_IP}:30718/api/dashboards/db" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" "./apis/grafana/ubicacion-buses-actual-dashboard.json"
+echo
 
