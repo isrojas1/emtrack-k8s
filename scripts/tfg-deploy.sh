@@ -19,14 +19,14 @@ kubectl apply -f ./deployments/namespaces.yaml
 helm repo add ertis https://ertis-research.github.io/Helm-charts/
 
 # Install helm charts
-helm upgrade --install opentwins ertis/OpenTwins --wait --dependency-update \
-             -f "./helms/opentwins/values.yaml" \
-             --namespace opentwins
-
-# Use my local fork
-# helm upgrade --install opentwins ../../OpenTwins --wait --dependency-update \
+# helm upgrade --install opentwins ertis/OpenTwins --wait --dependency-update \
 #              -f "./helms/opentwins/values.yaml" \
 #              --namespace opentwins
+
+# Use my local fork
+helm upgrade --install opentwins ../../OpenTwins --wait --dependency-update \
+             -f "./helms/opentwins/values.yaml" \
+             --namespace opentwins
 
 # Push harbor images
 docker push --all-tags "${NODE_IP}:30002/library/buslocation"
