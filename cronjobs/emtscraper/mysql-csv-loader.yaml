@@ -21,6 +21,10 @@ spec:
               wget -O /tmp/google_transit.zip https://datosabiertos.malaga.eu/recursos/transporte/EMT/lineasYHorarios/google_transit.zip
               unzip -o /tmp/google_transit.zip -d /tmp
               
+              # Crear base de datos emtdata
+              mysql --host=$(MYSQL_HOST) --user=$(DB_USER) --password=$(DB_PASSWORD) --skip-ssl \
+                -e "CREATE DATABASE IF NOT EXISTS emtdata;"
+
               # Resetear tablas y cargar datos en una transacción
               mysql --host=$(MYSQL_HOST) --user=$(DB_USER) --password=$(DB_PASSWORD) --database=$(DB_NAME) --local-infile=1 --skip-ssl \
                 -e "START TRANSACTION;
