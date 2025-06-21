@@ -40,7 +40,7 @@ send_post_request() {
 }
 
 # Create grafana's mysql connection
-send_post_request "http://${NODE_IP}:30718/api/datasources" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" "./apis/grafana/mysql-datasource.json"
+send_post_request "http://${NODE_IP}:30718/api/datasources" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" <(envsubst < ./apis/grafana/mysql-datasource.json)
 
 # Create ditto's mosquitto-emtscraper-source-connection
 send_put_request "http://${NODE_IP}:30525/api/2/connections/mosquitto-emtscraper-source-connection" "$DITTO_API_USERNAME" "$DITTO_API_PASSWORD" "./apis/ditto/mosquitto-emtscraper-source-connection.json"

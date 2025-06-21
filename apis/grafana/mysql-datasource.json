@@ -8,6 +8,9 @@
     "access": "proxy",
     "url": "mysql.mysql:3306",
     "user": "root",
+    "secureJsonData": {
+        "password": "${MYSQL_PASSWORD}"
+    },
     "database": "",
     "basicAuth": false,
     "isDefault": false,
