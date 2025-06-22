@@ -28,3 +28,10 @@ preferencia, ya sea local o en la nube.
 ![alt text](docs/images/grafana-ditto-config.png)
 
 - Ejecutar `bash scripts/connections.sh <ENV_FILE>`.
+
+- Entrar en el data source mysql y refrescar la página (raro)
+
+## Actualización
+
+- Ejecutar `bash scripts/tfg-deploy.sh <ENV_FILE>`.
+- Ejecutar `bash scripts/connections.sh <ENV_FILE>`.
