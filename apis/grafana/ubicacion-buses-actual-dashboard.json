@@ -9,14 +9,13 @@
         "slug": "ubicaciones-buses-actualmente",
         "url": "/d/feno3i9jb8e0wf/ubicaciones-buses-actualmente",
         "expires": "0001-01-01T00:00:00Z",
-        "created": "2025-06-20T17:31:03Z",
-        "updated": "2025-06-20T17:31:03Z",
+        "created": "2025-06-22T06:32:34Z",
+        "updated": "2025-06-22T06:32:34Z",
         "updatedBy": "admin",
         "createdBy": "admin",
         "version": 1,
         "hasAcl": false,
         "isFolder": false,
-        "apiVersion": "v0alpha1",
         "folderId": 0,
         "folderUid": "",
         "folderTitle": "General",
@@ -349,7 +348,11 @@
             "list": [
                 {
                     "allValue": "0.0",
-                    "current": {},
+                    "current": {
+                        "selected": true,
+                        "text": "1.0",
+                        "value": "1.0"
+                    },
                     "datasource": {
                         "type": "influxdb",
                         "uid": "P4528D75AB74BE2EA"
