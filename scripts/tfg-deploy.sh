@@ -26,7 +26,7 @@ helm repo add ertis https://ertis-research.github.io/Helm-charts/
 # Use my local fork
 helm upgrade --install opentwins ../../OpenTwins --wait --dependency-update \
              -f "./helms/opentwins/values.yaml" \
-             --namespace opentwins
+             --namespace opentwins --debug
 
 # Push harbor images
 docker push --all-tags "${NODE_IP}:30002/library/buslocation"
@@ -43,3 +43,7 @@ kubectl create secret generic mysql-secret \
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
 envsubst < ./cronjobs/emtscraper/routes.yaml | kubectl apply -f -
 kubectl apply -f cronjobs/emtscraper/mysql-csv-loader.yaml
+
+# Force first run of cronjobs
+kubectl -n scraping create job --from=cronjob/emtscraper-routes emtscraper-routes-manual-initial
+kubectl -n scraping create job --from=cronjob/mysql-csv-loader mysql-csv-loader-manual-initial
