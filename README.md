@@ -6,7 +6,7 @@ necesarios para poder realizar el despliegue del trabajo de fin de grado.
 ## Requisitos
 
 Necesitaremos un cluster kubernetes, este repositorio asume que se utiliza
-k3s, el cual puede ser instalado mediante siguiendo su
+k3s, el cual puede ser instalado siguiendo su
 [documentación oficial](https://docs.k3s.io/installation).
 Hasta el momento, solo se ha probado a desplegar en un cluster de un solo
 nodo.
@@ -27,11 +27,11 @@ preferencia, ya sea local o en la nube.
 - Iniciar sesión en Grafana y configurar en plugins -> opentwins los ajustes pertinentes.
 ![alt text](docs/images/grafana-ditto-config.png)
 
-- Ejecutar `bash scripts/connections.sh <ENV_FILE>`.
+- Ejecutar `bash scripts/import-resources.sh <ENV_FILE>`.
 
 - Entrar en el data source mysql y refrescar la página (raro)
 
 ## Actualización
 
 - Ejecutar `bash scripts/tfg-deploy.sh <ENV_FILE>`.
-- Ejecutar `bash scripts/connections.sh <ENV_FILE>`.
+- Ejecutar `bash scripts/import-resources.sh <ENV_FILE>`.
