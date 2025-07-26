@@ -2,7 +2,7 @@
 
 # Set env variables
 if [ $# -ne 1 ]; then
-  echo "Usage: ./scripts/connections.sh <ENV_FILE>"
+  echo "Usage: ./scripts/import-resources.sh <ENV_FILE>"
   exit 1
 fi
 
