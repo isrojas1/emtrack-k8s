@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emtmetrics
+  namespace: metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emtmetrics
+  template:
+    metadata:
+      labels:
+        app: emtmetrics
+    spec:
+      containers:
+      - name: emtmetrics
+        image: harbor.local/library/emtmetrics:0.2.0
+        command: ["uvicorn", "emtmetrics.app:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "debug"]
+        ports:
+        - containerPort: 8000
+        - containerPort: 5678
+        imagePullPolicy: Always
+        env:
+        - name: INFLUXDB_ORGANIZATION
+          value: "$INFLUXDB_ORGANIZATION"
+        - name: INFLUXDB_TOKEN
+          value: "$INFLUXDB_TOKEN"
+        - name: INFLUXDB_URL
+          value: "$INFLUXDB_URL"
+        - name: MYSQL_HOSTNAME
+          value: "$MYSQL_HOSTNAME"
+        - name: MYSQL_USER
+          value: "$MYSQL_USER"
+        - name: MYSQL_PASSWORD
+          value: "$MYSQL_PASSWORD"
+        - name: MYSQL_DATABASE
+          value: "$MYSQL_DATABASE"
+        - name: DEBUGPY
+          value: "1"

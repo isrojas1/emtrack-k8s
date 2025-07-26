@@ -31,6 +31,7 @@ helm upgrade --install opentwins ../../OpenTwins --wait --dependency-update \
 # Push harbor images
 docker push --all-tags "${NODE_IP}:30002/library/buslocation"
 docker push --all-tags "${NODE_IP}:30002/library/routes"
+docker push --all-tags "${NODE_IP}:30002/library/emtmetrics"
 
 # Deploy mysql
 envsubst < ./secrets/mysql-secret.yaml | kubectl apply -f -
@@ -42,6 +43,8 @@ kubectl create secret generic mysql-secret \
 # Deploy components
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
 envsubst < ./cronjobs/emtscraper/routes.yaml | kubectl apply -f -
+envsubst < ./deployments/emtmetrics.yaml | kubectl apply -f -
+kubectl apply -f services/emtmetrics.yaml
 kubectl apply -f cronjobs/emtscraper/mysql-csv-loader.yaml
 
 # Force first run of cronjobs
