@@ -10,10 +10,10 @@
         "url": "/d/d70c670c-7665-421e-9487-e2ed664b2fb1/ubicacion-bus",
         "expires": "0001-01-01T00:00:00Z",
         "created": "2025-06-22T06:32:34Z",
-        "updated": "2025-06-22T06:32:34Z",
+        "updated": "2025-09-06T11:58:45Z",
         "updatedBy": "admin",
         "createdBy": "admin",
-        "version": 1,
+        "version": 7,
         "hasAcl": false,
         "isFolder": false,
         "folderId": 0,
@@ -60,6 +60,119 @@
         "panels": [
             {
                 "datasource": {
+                    "type": "yesoreyeram-infinity-datasource",
+                    "uid": "derxfhfc3wzr4c"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "custom": {
+                            "align": "auto",
+                            "cellOptions": {
+                                "type": "auto"
+                            },
+                            "inspect": false
+                        },
+                        "mappings": [],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "green",
+                                    "value": null
+                                },
+                                {
+                                    "color": "red",
+                                    "value": 80
+                                }
+                            ]
+                        }
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 24,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 3,
+                "options": {
+                    "cellHeight": "sm",
+                    "footer": {
+                        "countRows": false,
+                        "fields": "",
+                        "reducer": [
+                            "sum"
+                        ],
+                        "show": false
+                    },
+                    "showHeader": true
+                },
+                "pluginVersion": "10.4.19",
+                "targets": [
+                    {
+                        "columns": [],
+                        "datasource": {
+                            "type": "yesoreyeram-infinity-datasource",
+                            "uid": "derxfhfc3wzr4c"
+                        },
+                        "filters": [],
+                        "format": "table",
+                        "global_query_id": "",
+                        "parser": "backend",
+                        "refId": "A",
+                        "root_selector": "",
+                        "source": "url",
+                        "type": "json",
+                        "url": "http://emtmetrics.metrics:8000/api/details/bus?bus_id=${busId}",
+                        "url_options": {
+                            "data": "",
+                            "method": "GET"
+                        }
+                    }
+                ],
+                "title": "Detalles del bus",
+                "transformations": [
+                    {
+                        "id": "filterFieldsByName",
+                        "options": {
+                            "include": {
+                                "names": [
+                                    "line",
+                                    "total_route_distance",
+                                    "last_distance_traveled",
+                                    "direction"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "id": "organize",
+                        "options": {
+                            "excludeByName": {},
+                            "includeByName": {},
+                            "indexByName": {
+                                "direction": 1,
+                                "last_distance_traveled": 2,
+                                "line": 0,
+                                "total_route_distance": 3
+                            },
+                            "renameByName": {
+                                "direction": "Sentido",
+                                "last_distance_traveled": "Última distancia en ruta (mts)",
+                                "line": "Línea",
+                                "total_route_distance": "Distancia total de ruta (mts)"
+                            }
+                        }
+                    }
+                ],
+                "type": "table"
+            },
+            {
+                "datasource": {
                     "type": "datasource",
                     "uid": "-- Mixed --"
                 },
@@ -96,7 +209,7 @@
                     "h": 21,
                     "w": 24,
                     "x": 0,
-                    "y": 0
+                    "y": 4
                 },
                 "id": 2,
                 "options": {
@@ -248,14 +361,63 @@
                                 "options": "C"
                             },
                             "location": {
-                                "latitude": "shape_pt_lat",
-                                "longitude": "shape_pt_lon",
+                                "latitude": "shape_latitude",
+                                "longitude": "shape_longitude",
                                 "mode": "coords"
                             },
                             "name": "Forma",
                             "opacity": 0.4,
                             "tooltip": true,
                             "type": "route"
+                        },
+                        {
+                            "config": {
+                                "showLegend": true,
+                                "style": {
+                                    "color": {
+                                        "fixed": "dark-green"
+                                    },
+                                    "opacity": 0.7,
+                                    "rotation": {
+                                        "fixed": 0,
+                                        "max": 360,
+                                        "min": -360,
+                                        "mode": "mod"
+                                    },
+                                    "size": {
+                                        "fixed": 7,
+                                        "max": 15,
+                                        "min": 2
+                                    },
+                                    "symbol": {
+                                        "fixed": "img/icons/marker/circle.svg",
+                                        "mode": "fixed"
+                                    },
+                                    "symbolAlign": {
+                                        "horizontal": "center",
+                                        "vertical": "center"
+                                    },
+                                    "textConfig": {
+                                        "fontSize": 12,
+                                        "offsetX": 0,
+                                        "offsetY": 0,
+                                        "textAlign": "center",
+                                        "textBaseline": "middle"
+                                    }
+                                }
+                            },
+                            "filterData": {
+                                "id": "byRefId",
+                                "options": "D"
+                            },
+                            "location": {
+                                "latitude": "prediction_latitude",
+                                "longitude": "prediction_longitude",
+                                "mode": "coords"
+                            },
+                            "name": "Prediccion",
+                            "tooltip": true,
+                            "type": "markers"
                         }
                     ],
                     "tooltip": {
@@ -286,37 +448,73 @@
                             "uid": "P4528D75AB74BE2EA"
                         },
                         "hide": false,
-                        "query": "import \"strings\"\r\n\r\ncodLinea = \r\n  from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"buses:712\")\r\n  |> last()\r\n  |> map(fn: (r) => ({\r\n          valor: \"lines:\" + r._value\r\n        }))\r\n  |> findRecord(fn: (key) => true, idx: 0)\r\n\r\nsentido = \r\n  from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_direction\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"buses:712\")\r\n  |> last()\r\n  |> map(fn: (r) => ({\r\n          valor: + r._value\r\n        }))\r\n  |> findRecord(fn: (key) => true, idx: 0)\r\n\r\nlinea =\r\n  from(bucket: \"default\")\r\n      |> range(start: -1d)\r\n      |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n      |> filter(fn: (r) => r[\"_field\"] =~ /^value_stops_properties_\\d+_(orden|sentido)$/)\r\n      |> filter(fn: (r) => r[\"thingId\"] == codLinea.valor)\r\n      |> last()\r\n      |> map(fn: (r) => ({\r\n          codLinea: r[\"thingId\"],\r\n          codParada: strings.split(v: r._field, t: \"_\")[3],\r\n          tipo: strings.split(v: r._field, t: \"_\")[4],\r\n          valor: r._value,\r\n          _time: r._time\r\n        }))\r\n      |> pivot(rowKey: [\"_time\", \"codLinea\", \"codParada\"], columnKey: [\"tipo\"], valueColumn: \"valor\")\r\n      |> filter(fn: (r) => exists r.sentido and string(v: r.sentido) == sentido.valor)\r\n      |> map(fn: (r) => ({\r\n          codParada: r.codParada,\r\n          orden: int(v: r.orden)\r\n        }))\r\n      |> sort(columns: [\"orden\"], desc: false)\r\n\r\nparadas =\r\n  from(bucket: \"default\")\r\n    |> range(start: -1d)\r\n    |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n    |> filter(fn: (r) => r[\"_field\"] =~ /^value_stop_properties_latitud$/ or r[\"_field\"] =~ /^value_stop_properties_longitud$/)\r\n    |> last()\r\n    |> map(fn: (r) => ({\r\n        codParada: strings.trimPrefix(v: r[\"thingId\"], prefix: \"stops:\"), // Aquí el thingId es el código de parada\r\n        tipo: if r[\"_field\"] =~ /^value_stop_properties_latitud$/ then \"latitud\" else \"longitud\",\r\n        valor: r._value,\r\n        _time: r._time\r\n      }))\r\n    |> pivot(rowKey: [\"_time\", \"codParada\"], columnKey: [\"tipo\"], valueColumn: \"valor\")\r\n    \r\njoin(\r\n  tables: {linea: linea, paradas: paradas},\r\n  on: [\"codParada\"]\r\n)\r\n  |> map(fn: (r) => ({\r\n      codParada: r.codParada,\r\n      orden: r.orden,\r\n      latitud: float(v: r.latitud),\r\n      longitud: float(v: r.longitud)\r\n    }))\r\n  |> sort(columns: [\"orden\"], desc: false)\r\n  |> yield(name: \"ParadasConCoordenadas\")\r\n",
+                        "query": "import \"strings\"\r\n\r\ncodLinea = \r\n  from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_code\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"${busId}\")\r\n  |> last()\r\n  |> map(fn: (r) => ({\r\n          valor: \"lines:\" + r._value\r\n        }))\r\n  |> findRecord(fn: (key) => true, idx: 0)\r\n\r\nsentido = \r\n  from(bucket: \"default\")\r\n  |> range(start: -1d)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n  |> filter(fn: (r) => r[\"_field\"] == \"value_line_properties_direction\")\r\n  |> filter(fn: (r) => r[\"thingId\"] == \"${busId}\")\r\n  |> last()\r\n  |> map(fn: (r) => ({\r\n          valor: + r._value\r\n        }))\r\n  |> findRecord(fn: (key) => true, idx: 0)\r\n\r\nlinea =\r\n  from(bucket: \"default\")\r\n      |> range(start: -1d)\r\n      |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n      |> filter(fn: (r) => r[\"_field\"] =~ /^value_stops_properties_\\d+_(orden|sentido)$/)\r\n      |> filter(fn: (r) => r[\"thingId\"] == codLinea.valor)\r\n      |> last()\r\n      |> map(fn: (r) => ({\r\n          codLinea: r[\"thingId\"],\r\n          codParada: strings.split(v: r._field, t: \"_\")[3],\r\n          tipo: strings.split(v: r._field, t: \"_\")[4],\r\n          valor: r._value,\r\n          _time: r._time\r\n        }))\r\n      |> pivot(rowKey: [\"_time\", \"codLinea\", \"codParada\"], columnKey: [\"tipo\"], valueColumn: \"valor\")\r\n      |> filter(fn: (r) => exists r.sentido and string(v: r.sentido) == sentido.valor)\r\n      |> map(fn: (r) => ({\r\n          codParada: r.codParada,\r\n          orden: int(v: r.orden)\r\n        }))\r\n      |> sort(columns: [\"orden\"], desc: false)\r\n\r\nparadas =\r\n  from(bucket: \"default\")\r\n    |> range(start: -1d)\r\n    |> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\")\r\n    |> filter(fn: (r) => r[\"_field\"] =~ /^value_stop_properties_latitud$/ or r[\"_field\"] =~ /^value_stop_properties_longitud$/)\r\n    |> last()\r\n    |> map(fn: (r) => ({\r\n        codParada: strings.trimPrefix(v: r[\"thingId\"], prefix: \"stops:\"), // Aquí el thingId es el código de parada\r\n        tipo: if r[\"_field\"] =~ /^value_stop_properties_latitud$/ then \"latitud\" else \"longitud\",\r\n        valor: r._value,\r\n        _time: r._time\r\n      }))\r\n    |> pivot(rowKey: [\"_time\", \"codParada\"], columnKey: [\"tipo\"], valueColumn: \"valor\")\r\n    \r\njoin(\r\n  tables: {linea: linea, paradas: paradas},\r\n  on: [\"codParada\"]\r\n)\r\n  |> map(fn: (r) => ({\r\n      codParada: r.codParada,\r\n      orden: r.orden,\r\n      latitud: float(v: r.latitud),\r\n      longitud: float(v: r.longitud)\r\n    }))\r\n  |> sort(columns: [\"orden\"], desc: false)\r\n  |> yield(name: \"ParadasConCoordenadas\")\r\n",
                         "refId": "A"
                     },
                     {
-                        "dataset": "emtdata",
+                        "columns": [
+                            {
+                                "selector": "latitude",
+                                "text": "shape_latitude",
+                                "type": "number"
+                            },
+                            {
+                                "selector": "longitude",
+                                "text": "shape_longitude",
+                                "type": "number"
+                            }
+                        ],
                         "datasource": {
-                            "type": "mysql",
-                            "uid": "denkd2jbpv1tsf"
+                            "type": "yesoreyeram-infinity-datasource",
+                            "uid": "derxfhfc3wzr4c"
                         },
-                        "editorMode": "code",
+                        "filters": [],
                         "format": "table",
+                        "global_query_id": "",
                         "hide": false,
-                        "rawQuery": true,
-                        "rawSql": "select * from shapes where shape_id = ${shapeId};",
+                        "parser": "backend",
                         "refId": "C",
-                        "sql": {
-                            "columns": [
-                                {
-                                    "parameters": [],
-                                    "type": "function"
-                                }
-                            ],
-                            "groupBy": [
-                                {
-                                    "property": {
-                                        "type": "string"
-                                    },
-                                    "type": "groupBy"
-                                }
-                            ],
-                            "limit": 50
+                        "root_selector": "points",
+                        "source": "url",
+                        "type": "json",
+                        "url": "http://192.168.32.131:31315/api/details/shape?bus_id=${busId}",
+                        "url_options": {
+                            "data": "",
+                            "method": "GET"
+                        }
+                    },
+                    {
+                        "columns": [
+                            {
+                                "selector": "predicted_location.latitude",
+                                "text": "prediction_latitude",
+                                "type": "number"
+                            },
+                            {
+                                "selector": "predicted_location.longitude",
+                                "text": "prediction_longitude",
+                                "type": "number"
+                            }
+                        ],
+                        "datasource": {
+                            "type": "yesoreyeram-infinity-datasource",
+                            "uid": "derxfhfc3wzr4c"
+                        },
+                        "filters": [],
+                        "format": "as-is",
+                        "global_query_id": "",
+                        "hide": false,
+                        "parser": "backend",
+                        "refId": "D",
+                        "root_selector": "",
+                        "source": "url",
+                        "type": "json",
+                        "url": "http://emtmetrics.metrics:8000/api/predictions/position",
+                        "url_options": {
+                            "body_content_type": "application/json",
+                            "body_type": "raw",
+                            "data": "{\r\n    \"bus_id\": \"${busId}\",\r\n    \"prediction_time_seconds\": ${predictionSeconds}\r\n}",
+                            "method": "POST"
                         }
                     }
                 ],
@@ -399,7 +597,7 @@
                     "h": 18,
                     "w": 24,
                     "x": 0,
-                    "y": 21
+                    "y": 25
                 },
                 "id": 1,
                 "options": {
@@ -455,7 +653,7 @@
                     "definition": "from(bucket: \"default\")\n  |> range(start: -15m) // Last 15 minutes\n  |> filter(fn: (r) => r._measurement == \"mqtt_consumer\" and r._field == \"value_gps_properties_latitude\")\n  |> keep(columns: [\"thingId\"]) // Keep only the thingId column\n  |> distinct(column: \"thingId\") // Get distinct thingId values with latitude\n  |> group()\n  ",
                     "hide": 0,
                     "includeAll": false,
-                    "label": "Bus Id",
+                    "label": "Identificador del bus",
                     "multi": false,
                     "name": "busId",
                     "options": [],
@@ -468,27 +666,61 @@
                 },
                 {
                     "current": {
-                        "selected": false,
-                        "text": "101",
-                        "value": "101"
+                        "selected": true,
+                        "text": "60",
+                        "value": "60"
                     },
-                    "datasource": {
-                        "type": "mysql",
-                        "uid": "denkd2jbpv1tsf"
-                    },
-                    "definition": "SELECT DISTINCT shape_id\nFROM shapes\nORDER BY CAST(shape_id AS UNSIGNED);",
                     "hide": 0,
                     "includeAll": false,
-                    "label": "Shape Id",
+                    "label": "Segundos predicción",
                     "multi": false,
-                    "name": "shapeId",
-                    "options": [],
-                    "query": "SELECT DISTINCT shape_id\nFROM shapes\nORDER BY CAST(shape_id AS UNSIGNED);",
-                    "refresh": 1,
-                    "regex": "",
+                    "name": "predictionSeconds",
+                    "options": [
+                        {
+                            "selected": true,
+                            "text": "60",
+                            "value": "60"
+                        },
+                        {
+                            "selected": false,
+                            "text": "120",
+                            "value": "120"
+                        },
+                        {
+                            "selected": false,
+                            "text": "180",
+                            "value": "180"
+                        },
+                        {
+                            "selected": false,
+                            "text": "240",
+                            "value": "240"
+                        },
+                        {
+                            "selected": false,
+                            "text": "300",
+                            "value": "300"
+                        },
+                        {
+                            "selected": false,
+                            "text": "360",
+                            "value": "360"
+                        },
+                        {
+                            "selected": false,
+                            "text": "420",
+                            "value": "420"
+                        },
+                        {
+                            "selected": false,
+                            "text": "500",
+                            "value": "500"
+                        }
+                    ],
+                    "query": "60, 120, 180, 240, 300, 360, 420, 500",
+                    "queryValue": "",
                     "skipUrlSync": false,
-                    "sort": 0,
-                    "type": "query"
+                    "type": "custom"
                 }
             ]
         },
@@ -500,7 +732,7 @@
         "timezone": "",
         "title": "Ubicación Bus",
         "uid": "d70c670c-7665-421e-9487-e2ed664b2fb1",
-        "version": 1,
+        "version": 7,
         "weekStart": ""
     }
 }
