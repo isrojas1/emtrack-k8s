@@ -1,0 +1,21 @@
+{
+    "id": 3,
+    "uid": "derxfhfc3wzr4c",
+    "orgId": 1,
+    "name": "emtmetrics",
+    "type": "yesoreyeram-infinity-datasource",
+    "typeName": "Infinity",
+    "typeLogoUrl": "public/plugins/yesoreyeram-infinity-datasource/img/icon.svg",
+    "access": "proxy",
+    "url": "",
+    "user": "",
+    "database": "",
+    "basicAuth": false,
+    "isDefault": false,
+    "jsonData": {
+        "customHealthCheckEnabled": true,
+        "customHealthCheckUrl": "http://emtmetrics.metrics:8000/",
+        "global_queries": []
+    },
+    "readOnly": false
+}
