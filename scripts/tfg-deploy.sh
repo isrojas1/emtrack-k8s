@@ -24,7 +24,7 @@ helm repo add ertis https://ertis-research.github.io/Helm-charts/
 #              --namespace opentwins
 
 # Use my local fork
-helm upgrade --install opentwins ../../OpenTwins --wait --dependency-update \
+helm upgrade --install opentwins "$OPENTWINS_FORK_PATH" --wait --dependency-update \
              -f "./helms/opentwins/values.yaml" \
              --namespace opentwins --debug
 
