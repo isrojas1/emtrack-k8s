@@ -25,7 +25,10 @@ spec:
         - name: INFLUXDB_ORGANIZATION
           value: "$INFLUXDB_ORGANIZATION"
         - name: INFLUXDB_TOKEN
-          value: "$INFLUXDB_TOKEN"
+          valueFrom:
+            secretKeyRef:
+              name: opentwins-influxdb2-auth
+              key: admin-token
         - name: INFLUXDB_URL
           value: "$INFLUXDB_URL"
         - name: MYSQL_HOSTNAME

@@ -38,6 +38,11 @@ envsubst < ./secrets/mysql-secret.yaml | kubectl apply -f -
 kubectl apply -f ./services/mysql.yaml
 kubectl apply -f ./statefulsets/mysql.yaml
 
+# Copy opentwins-influxdb2-auth to metrics namespace
+kubectl get secret opentwins-influxdb2-auth -n opentwins -o yaml | \
+    sed "s/namespace: opentwins/namespace: metrics/" | \
+    kubectl apply -n metrics -f -
+
 # Deploy components
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
 envsubst < ./cronjobs/emtscraper/routes.yaml | kubectl apply -f -
