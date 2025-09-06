@@ -37,8 +37,6 @@ docker push --all-tags "${NODE_IP}:30002/library/emtmetrics"
 envsubst < ./secrets/mysql-secret.yaml | kubectl apply -f -
 kubectl apply -f ./services/mysql.yaml
 kubectl apply -f ./statefulsets/mysql.yaml
-kubectl create secret generic mysql-secret \
-  --from-literal=loader_password="$MYSQL_PASSWORD" \
 
 # Deploy components
 envsubst < ./deployments/emtscraper/buslocation.yaml | kubectl apply -f -
