@@ -39,6 +39,10 @@ send_post_request() {
          "$url"
 }
 
+# Create grafana's emtmetrics connection
+send_post_request "http://${NODE_IP}:30718/api/datasources" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" <(envsubst < ./apis/grafana/emtmetrics-datasource.json)
+echo
+
 # Create grafana's mysql connection
 send_post_request "http://${NODE_IP}:30718/api/datasources" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" <(envsubst < ./apis/grafana/mysql-datasource.json)
 echo
