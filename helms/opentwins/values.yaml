@@ -3,3 +3,7 @@ ditto:
     enabled: "false"
   swaggerui:
     enabled: "true"
+
+grafana:
+  plugins:
+    - yesoreyeram-infinity-datasource
