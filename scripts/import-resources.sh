@@ -59,3 +59,5 @@ echo
 send_post_request "http://${NODE_IP}:30718/api/dashboards/db" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" "./apis/grafana/ubicacion-buses-actual-dashboard.json"
 echo
 
+# Finally, restart grafana
+kubectl rollout restart -n opentwins deployment opentwins-grafana
