@@ -44,7 +44,3 @@ envsubst < ./cronjobs/emtscraper/routes.yaml | kubectl apply -f -
 envsubst < ./deployments/emtmetrics.yaml | kubectl apply -f -
 kubectl apply -f services/emtmetrics.yaml
 kubectl apply -f cronjobs/emtscraper/mysql-csv-loader.yaml
-
-# Force first run of cronjobs
-kubectl -n scraping create job --from=cronjob/emtscraper-routes emtscraper-routes-manual-initial
-kubectl -n scraping create job --from=cronjob/mysql-csv-loader mysql-csv-loader-manual-initial

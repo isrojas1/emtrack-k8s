@@ -59,5 +59,9 @@ echo
 send_post_request "http://${NODE_IP}:30718/api/dashboards/db" "$GRAFANA_API_USERNAME" "$GRAFANA_API_PASSWORD" "./apis/grafana/ubicacion-buses-actual-dashboard.json"
 echo
 
+# Force first run of cronjobs
+kubectl -n scraping create job --from=cronjob/emtscraper-routes emtscraper-routes-manual-initial
+kubectl -n scraping create job --from=cronjob/mysql-csv-loader mysql-csv-loader-manual-initial
+
 # Finally, restart grafana
 kubectl rollout restart -n opentwins deployment opentwins-grafana
