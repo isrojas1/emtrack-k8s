@@ -24,9 +24,9 @@ helm upgrade --install opentwins "$OPENTWINS_FORK_PATH" --wait --dependency-upda
              --namespace opentwins
 
 # Push harbor images
-docker push --all-tags "${NODE_IP}:30002/library/buslocation"
-docker push --all-tags "${NODE_IP}:30002/library/routes"
-docker push --all-tags "${NODE_IP}:30002/library/emtmetrics"
+docker push "${NODE_IP}:30002/library/buslocation:0.2.2"
+docker push "${NODE_IP}:30002/library/routes:0.2.3"
+docker push "${NODE_IP}:30002/library/emtmetrics:0.2.0"
 
 # Deploy mysql
 envsubst < ./secrets/mysql-secret.yaml | kubectl apply -f -
